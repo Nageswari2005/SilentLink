@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silentlink | Standalone</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <i data-lucide="activity" class="logo-icon"></i>
+                <span class="logo-text">Silentlink</span>
+            </div>
+            <nav class="nav">
+                <div class="nav-item active"><i data-lucide="home"></i> Dashboard</div>
+                <div class="nav-item"><i data-lucide="message-square"></i> Messages</div>
+                <div class="nav-item"><i data-lucide="settings"></i> Settings</div>
+            </nav>
+            <div class="voice-selector">
+                <label class="label">Voice Output</label>
+                <select id="languageSelect">
+                    <option value="en">English (US)</option>
+                    <option value="hi">Hindi (IN)</option>
+                    <option value="es">Spanish (ES)</option>
+                    <option value="fr">French (FR)</option>
+                </select>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1><span class="indicator"></span> Interface Command Center</h1>
+            </header>
+
+            <div class="workspace-grid">
+                <!-- Left: Video Area -->
+                <div class="column-left">
+                    <section class="card camera-card">
+                        <div id="statusBadge" class="status-badge offline">
+                            <span class="dot"></span>
+                            <span class="status-text">Sensor Offline</span>
+                        </div>
+                        <video id="webcam" autoplay playsinline></video>
+                        <canvas id="output_canvas"></canvas>
+                        
+                        <!-- Progress Overlay (Hidden by default) -->
+                        <div id="holdOverlay" class="overlay hidden">
+                            <div class="progress-container">
+                                <svg class="progress-ring" width="120" height="120">
+                                    <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
+                                    <circle id="progressCircle" class="ring-fg" cx="60" cy="60" r="50"></circle>
+                                </svg>
+                                <div id="progressText" class="progress-value">0%</div>
+                            </div>
+                            <p id="poseLabel" class="pose-label">Hold to Confirm</p>
+                        </div>
+                    </section>
+
+                    <section class="card transcription-card">
+                        <div class="card-header">
+                            <span class="label">Live Transcription</span>
+                            <span id="confidenceInfo" class="confidence">Confidence: 0%</span>
+                        </div>
+                        <p id="transcriptionText" class="transcription">System ready. Awaiting gestures...</p>
+                    </section>
+                </div>
+
+                <!-- Right: Module Area -->
+                <div class="column-right">
+                    <section class="card messaging-card">
+                        <h2 class="card-title"><i data-lucide="message-square"></i> Messaging Composer</h2>
+                        <div id="chatHistory" class="chat-history">
+                            <!-- Messages will appear here -->
+                        </div>
+                        <div class="composer">
+                            <input type="text" id="messageInput" readonly placeholder="Awaiting entry...">
+                            <button class="send-btn"><i data-lucide="send"></i></button>
+                        </div>
+                    </section>
+
+                    <section class="card modalities-card">
+                        <h2 class="card-title"><i data-lucide="mouse-pointer-2"></i> Modalities</h2>
+                        <div class="modalities-list">
+                            <div class="modality-item"><span>Alphabet</span> <span class="badge">Standard</span></div>
+                            <div class="modality-item"><span>WhatsApp</span> <span class="badge pulse">W-Sign</span></div>
+                            <div class="modality-item"><span>Hello</span> <span class="badge pulse">Palm</span></div>
+                            <div class="modality-item"><span>Scrolling</span> <span class="badge">Index+Mid</span></div>
+                            <div class="modality-item"><span>Actions</span> <span class="badge">Pinch</span></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="status-bar">
+        <div class="engine-status">
+            <span class="dot"></span> Engine Active
+            <span class="separator">|</span>
+            <span id="fps">FPS: --</span>
+        </div>
+        <div class="version">Silentlink Standalone v1.0.0</div>
+    </footer>
+
+    <!-- MediaPipe Tasks Vision -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js" crossorigin="anonymous"></script>
+    <script src="main.js" type="module"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Silentlink Backend Debugger</title>
+    <style>
+        body { font-family: sans-serif; background: #111; color: #eee; padding: 20px; }
+        .log-container { background: #222; border: 1px solid #444; border-radius: 8px; padding: 10px; height: 300px; overflow-y: auto; font-family: monospace; }
+        .status { padding: 5px 10px; border-radius: 4px; display: inline-block; margin-bottom: 10px; }
+        .status-ok { background: #065f46; color: #a7f3d0; }
+        .status-error { background: #991b1b; color: #fee2e2; }
+    </style>
+</head>
+<body>
+    <h1>Silentlink Backend Debugger</h1>
+    <div id="status" class="status status-error">Disconnected</div>
+    
+    <h3>WebSocket Logs</h3>
+    <div id="logs" class="log-container"></div>
+
+    <h3>Command Simulation</h3>
+    <button onclick="sendData()">Send Mock Landmark Data</button>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const logsEl = document.getElementById('logs');
+        let ws;
+
+        function log(msg) {
+            const di = document.createElement('div');
+            di.textContent = `[${new Date().toLocaleTimeString()}] ${JSON.stringify(msg)}`;
+            logsEl.appendChild(di);
+            logsEl.scrollTop = logsEl.scrollHeight;
+        }
+
+        function connect() {
+            ws = new WebSocket('ws://localhost:8000/ws/landmarks');
+            ws.onopen = () => {
+                statusEl.textContent = 'Connected (ws://localhost:8000)';
+                statusEl.className = 'status status-ok';
+                log('Connected!');
+            };
+            ws.onmessage = (e) => {
+                log(JSON.parse(e.data));
+            };
+            ws.onclose = () => {
+                statusEl.textContent = 'Disconnected';
+                statusEl.className = 'status status-error';
+                setTimeout(connect, 2000);
+            };
+            ws.onerror = (err) => log('WS Error: ' + err);
+        }
+
+        function sendData() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const mockData = {
+                    landmarks: [[{x:0.5, y:0.5, z:0}]],
+                    target_lang: 'en'
+                };
+                ws.send(JSON.stringify(mockData));
+                log('Sent: Mock Landmarks');
+            }
+        }
+
+        connect();
+    </script>
+</body>
+</html>
