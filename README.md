@@ -44,21 +44,18 @@ This makes the app feel responsive, modular, and easy to extend as more gestures
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- HTML5
-- CSS3
-- JavaScript (ES6)
-- MediaPipe
-- WebSocket API
+## 🛠️ Tech Stack
 
-### Backend
-- Python
-- FastAPI
-- OpenCV
-- MediaPipe
-- WebSockets
-- PyAutoGUI
-- Deep Translator
+| Category | Technologies |
+|----------|--------------|
+| **Frontend** | HTML5, CSS3, JavaScript (ES6), WebSocket API |
+| **Backend** | Python 3, FastAPI, Uvicorn, WebSockets |
+| **Computer Vision** | OpenCV, MediaPipe, NumPy |
+| **System Automation** | PyAutoGUI, PyGetWindow, PyWin32 |
+| **Translation & Speech** | Deep Translator, gTTS, Web Speech API |
+| **Data Storage** | Browser Local Storage, JSON |
+| **Development Tools** | Visual Studio Code, Git, GitHub, Python Virtual Environment |
+| **Communication** | REST APIs, WebSockets |
 
 ---
 
