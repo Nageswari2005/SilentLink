@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilentLink | Secure Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-body">
+    <div class="background-glow glow-a"></div>
+    <div class="background-glow glow-b"></div>
+
+    <main class="auth-shell">
+        <section class="auth-scene">
+            <div class="auth-visual" aria-hidden="true">
+                <div class="auth-blob a"></div>
+                <div class="auth-blob b"></div>
+                <div class="auth-blob c"></div>
+                <div class="auth-hero-badge">AI Ready</div>
+                <div class="auth-illustration">
+                    <div class="auth-orbit"></div>
+                    <div class="logo-mark"><i data-lucide="sparkles"></i></div>
+                </div>
+                <div class="auth-mini-card">
+                    <strong>Secure Command Center</strong>
+                    <p>Gesture, voice, and visual intelligence in one fluid experience.</p>
+                </div>
+            </div>
+
+            <div class="auth-card">
+                <div class="auth-brand">
+                    <div class="logo-mark"><i data-lucide="shield-check"></i></div>
+                    <div>
+                        <p class="eyebrow">Secure access</p>
+                        <h1>Welcome back</h1>
+                    </div>
+                </div>
+
+                <form id="loginForm" class="auth-form">
+                    <label class="auth-label" for="email">Username</label>
+                    <input id="email" name="email" type="text" autocomplete="username" placeholder="Enter your username" required>
+
+                    <label class="auth-label" for="password">Passcode</label>
+                    <input id="password" name="password" type="password" placeholder="Use demo / silentlink" required>
+
+                    <button class="primary-btn auth-submit" type="submit">Enter Command Center</button>
+                </form>
+
+                <p id="authHint" class="auth-hint">Enter your account details to access the command center.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        if (localStorage.getItem('silentlink-auth')) {
+            window.location.replace('index.html');
+            throw new Error('already authenticated');
+        }
+
+        const form = document.getElementById('loginForm');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const hint = document.getElementById('authHint');
+            if (email && password) {
+                localStorage.setItem('silentlink-auth', JSON.stringify({ email, signedInAt: Date.now() }));
+                window.location.replace('index.html');
+            } else {
+                hint.textContent = 'Enter both a username and passcode to continue.';
+            }
+        });
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

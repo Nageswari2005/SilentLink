@@ -3,25 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Silentlink | Standalone</title>
+    <title>SilentLink | Premium Command Center</title>
+    <script>
+        if (!localStorage.getItem('silentlink-auth')) {
+            window.location.replace('login.html');
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
+    <div class="background-glow glow-a"></div>
+    <div class="background-glow glow-b"></div>
+
+    <div class="app-shell">
         <aside class="sidebar">
             <div class="logo-area">
-                <i data-lucide="activity" class="logo-icon"></i>
-                <span class="logo-text">Silentlink</span>
+                <div class="logo-mark"><i data-lucide="activity" class="logo-icon"></i></div>
+                <span class="logo-text">SilentLink</span>
             </div>
+
             <nav class="nav">
-                <div class="nav-item active"><i data-lucide="home"></i> Dashboard</div>
-                <div class="nav-item"><i data-lucide="message-square"></i> Messages</div>
-                <div class="nav-item"><i data-lucide="settings"></i> Settings</div>
+                <button class="nav-item active" type="button" data-section="dashboard"><i data-lucide="home"></i> Dashboard</button>
+                <button class="nav-item" type="button" data-section="messages"><i data-lucide="message-square"></i> Messages</button>
+                <button class="nav-item" type="button" data-section="history"><i data-lucide="history"></i> History</button>
+                <button class="nav-item" type="button" data-section="settings"><i data-lucide="settings"></i> Settings</button>
             </nav>
-            <div class="voice-selector">
+
+            <div class="sidebar-footer">
                 <label class="label">Voice Output</label>
                 <select id="languageSelect">
                     <option value="en">English (US)</option>
@@ -29,72 +41,215 @@
                     <option value="es">Spanish (ES)</option>
                     <option value="fr">French (FR)</option>
                 </select>
+
+                <div class="api-controls">
+                    <label class="label">Backend URL</label>
+                    <div class="api-input-row">
+                        <input id="apiBaseUrl" type="text" value="http://127.0.0.1:8000">
+                        <button id="connectApiBtn" type="button">Connect</button>
+                    </div>
+                </div>
             </div>
         </aside>
 
-        <!-- Main Workspace -->
         <main class="main-content">
             <header class="top-bar">
-                <h1><span class="indicator"></span> Interface Command Center</h1>
+                <div class="title-group">
+                    <span class="indicator"></span>
+                    <div>
+                        <p class="eyebrow">Premium Interface</p>
+                        <h1>SilentLink Command Center</h1>
+                    </div>
+                </div>
+                <div class="top-actions">
+                    <button id="ttsToggleBtn" class="secondary-btn" type="button"><i data-lucide="volume-2"></i> TTS</button>
+                    <button id="callActionBtn" class="primary-btn" type="button"><i data-lucide="phone-call"></i> Call</button>
+                    <button id="logoutBtn" class="secondary-btn" type="button"><i data-lucide="log-out"></i> Logout</button>
+                    <div id="apiStatePill" class="state-pill offline">
+                        <span class="dot"></span>
+                        <span id="apiStateText">Backend Offline</span>
+                    </div>
+                </div>
             </header>
 
-            <div class="workspace-grid">
-                <!-- Left: Video Area -->
-                <div class="column-left">
-                    <section class="card camera-card">
-                        <div id="statusBadge" class="status-badge offline">
-                            <span class="dot"></span>
-                            <span class="status-text">Sensor Offline</span>
-                        </div>
-                        <video id="webcam" autoplay playsinline></video>
-                        <canvas id="output_canvas"></canvas>
-                        
-                        <!-- Progress Overlay (Hidden by default) -->
-                        <div id="holdOverlay" class="overlay hidden">
-                            <div class="progress-container">
-                                <svg class="progress-ring" width="120" height="120">
-                                    <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
-                                    <circle id="progressCircle" class="ring-fg" cx="60" cy="60" r="50"></circle>
-                                </svg>
-                                <div id="progressText" class="progress-value">0%</div>
+            <div id="dashboard" class="workspace-grid">
+                <section class="column-left">
+                    <section class="analytics-grid" aria-label="Live analytics">
+                        <article class="analytics-card"><span class="analytics-icon gesture"><i data-lucide="hand"></i></span><div><span class="analytics-label">Gesture count</span><strong id="gestureCount">0</strong><small id="gestureCountTrend">Waiting for input</small></div></article>
+                        <article class="analytics-card"><span class="analytics-icon accuracy"><i data-lucide="target"></i></span><div><span class="analytics-label">Accuracy</span><strong id="accuracyCard">--%</strong><small id="accuracyTrend">No readings yet</small></div></article>
+                        <article class="analytics-card"><span class="analytics-icon backend"><i data-lucide="server"></i></span><div><span class="analytics-label">Backend status</span><strong id="backendStatusCard">Offline</strong><small id="backendStatusDetail">Connecting…</small></div></article>
+                        <article class="analytics-card"><span class="analytics-icon fps"><i data-lucide="gauge"></i></span><div><span class="analytics-label">Stream FPS</span><strong id="fpsCard">--</strong><small>Camera performance</small></div></article>
+                        <article class="analytics-card"><span class="analytics-icon session"><i data-lucide="timer"></i></span><div><span class="analytics-label">Session duration</span><strong id="sessionDuration">00:00</strong><small>Current workspace</small></div></article>
+                        <article class="analytics-card"><span class="analytics-icon total"><i data-lucide="chart-no-axes-combined"></i></span><div><span class="analytics-label">Total gestures</span><strong id="totalGestures">0</strong><small>Saved across sessions</small></div></article>
+                        <article class="analytics-card"><span class="analytics-icon model"><i data-lucide="brain-circuit"></i></span><div><span class="analytics-label">Model version</span><strong id="modelVersion">0.10.x</strong><small id="modelStatusDetail">Loading vision model</small></div></article>
+                    </section>
+                    <article class="card hero-card">
+                        <div class="card-topbar">
+                            <div>
+                                <p class="eyebrow">Live camera panel</p>
+                                <h2>Vision stream</h2>
                             </div>
-                            <p id="poseLabel" class="pose-label">Hold to Confirm</p>
+                            <div id="statusBadge" class="status-badge offline">
+                                <span class="dot"></span>
+                                <span class="status-text">Sensor Offline</span>
+                            </div>
                         </div>
-                    </section>
 
-                    <section class="card transcription-card">
-                        <div class="card-header">
-                            <span class="label">Live Transcription</span>
-                            <span id="confidenceInfo" class="confidence">Confidence: 0%</span>
+                        <div class="camera-stage">
+                            <video id="webcam" autoplay playsinline></video>
+                            <canvas id="output_canvas"></canvas>
+
+                            <div class="scan-line" aria-hidden="true"></div>
+                            <div class="live-indicator" aria-label="Live camera feed"><span></span> LIVE</div>
+                            <div class="camera-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+                            <div class="camera-overlay">
+                                <div class="overlay-chip">
+                                    <span class="dot"></span>
+                                    <span id="gestureStatusText">Gesture queue idle</span>
+                                </div>
+                                <div class="camera-hud">
+                                    <div class="hud-item">
+                                        <span class="label">Gesture</span>
+                                        <strong id="gestureLabel">Awaiting input</strong>
+                                    </div>
+                                    <div class="hud-item">
+                                        <span class="label">Confidence</span>
+                                        <strong id="confidenceInfo">Confidence: 0%</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="holdOverlay" class="overlay hidden">
+                                <div class="progress-container">
+                                    <svg class="progress-ring" width="120" height="120">
+                                        <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
+                                        <circle id="progressCircle" class="ring-fg" cx="60" cy="60" r="50"></circle>
+                                    </svg>
+                                    <div id="progressText" class="progress-value">0%</div>
+                                </div>
+                                <p id="poseLabel" class="pose-label">Hold to Confirm</p>
+                            </div>
                         </div>
+
                         <p id="transcriptionText" class="transcription">System ready. Awaiting gestures...</p>
-                    </section>
-                </div>
+                        <p id="backendSummary" class="backend-summary">Connecting to services...</p>
 
-                <!-- Right: Module Area -->
-                <div class="column-right">
-                    <section class="card messaging-card">
-                        <h2 class="card-title"><i data-lucide="message-square"></i> Messaging Composer</h2>
-                        <div id="chatHistory" class="chat-history">
-                            <!-- Messages will appear here -->
+                        <div class="insight-strip">
+                            <div class="insight-pill">
+                                <span class="label">Engine</span>
+                                <span id="engineState" class="value">Booting</span>
+                            </div>
+                            <div class="insight-pill">
+                                <span class="label">Latency</span>
+                                <span id="latencyValue" class="value">-- ms</span>
+                            </div>
+                            <div class="insight-pill">
+                                <span class="label">API Health</span>
+                                <span id="apiHealthValue" class="value">Unknown</span>
+                            </div>
+                            <div class="insight-pill">
+                                <span class="label">Last Action</span>
+                                <span id="lastActionValue" class="value">Awaiting</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card metrics-card">
+                        <div class="card-header">
+                            <div>
+                                <p class="eyebrow">Gesture detection output</p>
+                                <h3>Live control feed</h3>
+                            </div>
+                            <span class="badge">Active</span>
+                        </div>
+                        <div id="gestureFeed" class="gesture-feed">
+                            <div class="gesture-row">
+                                <span class="gesture-name">Idle</span>
+                                <span class="gesture-value">Ready</span>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="column-right">
+                    <article class="card tts-card">
+                        <div class="card-header">
+                            <div>
+                                <p class="eyebrow">Text-to-speech controls</p>
+                                <h3>Voice output</h3>
+                            </div>
+                            <span class="badge">Adaptive</span>
+                        </div>
+                        <div class="tts-controls">
+                            <button class="chip-btn" data-action="play" type="button"><i data-lucide="play"></i> Play</button>
+                            <button class="chip-btn" data-action="pause" type="button"><i data-lucide="pause"></i> Pause</button>
+                            <button class="chip-btn" data-action="stop" type="button"><i data-lucide="square"></i> Stop</button>
+                        </div>
+                        <div id="ttsPreview" class="tts-preview">No speech queued.</div>
+                    </article>
+
+                    <article id="messages" class="card messaging-card">
+                        <div class="card-header">
+                            <div>
+                                <p class="eyebrow">Messaging section</p>
+                                <h3>Compose</h3>
+                            </div>
+                            <span class="badge">Live</span>
+                        </div>
+                        <div id="chatHistory" class="chat-history" aria-live="polite"></div>
+                        <div id="typingIndicator" class="typing-indicator hidden" aria-live="polite">
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
+                            <span class="typing-label">SilentLink is typing…</span>
                         </div>
                         <div class="composer">
-                            <input type="text" id="messageInput" readonly placeholder="Awaiting entry...">
-                            <button class="send-btn"><i data-lucide="send"></i></button>
+                            <div class="composer-input-wrap">
+                                <input type="text" id="messageInput" maxlength="160" placeholder="Type or speak a message...">
+                                <div id="messageCounter" class="message-counter" aria-live="polite">0 / 160</div>
+                            </div>
+                            <button id="sendBtn" class="send-btn" type="button" aria-label="Send message"><i data-lucide="send"></i></button>
                         </div>
-                    </section>
+                    </article>
 
-                    <section class="card modalities-card">
-                        <h2 class="card-title"><i data-lucide="mouse-pointer-2"></i> Modalities</h2>
-                        <div class="modalities-list">
-                            <div class="modality-item"><span>Alphabet</span> <span class="badge">Standard</span></div>
-                            <div class="modality-item"><span>WhatsApp</span> <span class="badge pulse">W-Sign</span></div>
-                            <div class="modality-item"><span>Hello</span> <span class="badge pulse">Palm</span></div>
-                            <div class="modality-item"><span>Scrolling</span> <span class="badge">Index+Mid</span></div>
-                            <div class="modality-item"><span>Actions</span> <span class="badge">Pinch</span></div>
+                    <article id="history" class="card history-card">
+                        <div class="card-header">
+                            <div>
+                                <p class="eyebrow">History panel</p>
+                                <h3>Recent events</h3>
+                            </div>
+                            <div class="card-actions"><span id="historyCount" class="badge">1 item</span><button id="clearHistoryBtn" class="icon-btn" type="button" aria-label="Clear history"><i data-lucide="trash-2"></i></button></div>
                         </div>
-                    </section>
-                </div>
+                        <ul id="historyList" class="history-list">
+                            <li class="history-item muted">System ready for input.</li>
+                        </ul>
+                    </article>
+
+                    <article id="settings" class="card settings-card">
+                        <div class="card-header">
+                            <div>
+                                <p class="eyebrow">Settings panel</p>
+                                <h3>Preferences</h3>
+                            </div>
+                            <span id="settingsState" class="badge">Saved</span>
+                        </div>
+                        <div class="settings-grid">
+                            <label class="setting-item">
+                                <span>Auto reply</span>
+                                <input id="autoReplySetting" type="checkbox" checked>
+                            </label>
+                            <label class="setting-item">
+                                <span>Gesture assist</span>
+                                <input id="gestureAssistSetting" type="checkbox" checked>
+                            </label>
+                            <label class="setting-item">
+                                <span>Voice confirmation</span>
+                                <input id="voiceConfirmationSetting" type="checkbox" checked>
+                            </label>
+                        </div>
+                    </article>
+                </section>
             </div>
         </main>
     </div>
@@ -105,12 +260,20 @@
             <span class="separator">|</span>
             <span id="fps">FPS: --</span>
         </div>
-        <div class="version">Silentlink Standalone v1.0.0</div>
+        <div class="version">SilentLink Standalone v1.0.0</div>
     </footer>
 
-    <!-- MediaPipe Tasks Vision -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js" crossorigin="anonymous"></script>
     <script src="main.js" type="module"></script>
-    <script>lucide.createIcons();</script>
+    <script>
+        lucide.createIcons();
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('silentlink-auth');
+                window.location.replace('login.html');
+            });
+        }
+    </script>
 </body>
 </html>
