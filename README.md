@@ -1,46 +1,42 @@
 # Silentlink
 
-A futuristic gesture-control experience that turns your webcam into a hands-free command center.
-
-Silentlink blends computer vision, real-time hand tracking, and a polished web dashboard to let you control your PC with natural gestures. From cursor movement and clicks to scrolling, dragging, and launch actions, the system turns your hand motions into intuitive digital commands.
-
-![Silentlink](https://img.shields.io/badge/status-active-brightgreen)
-![Silentlink](https://img.shields.io/badge/stack-FastAPI%20%2B%20React%20%2B%20Vite-blue)
+SilentLink is an AI-powered Sign Language Translation and Gesture Control System that enables users to control a computer using hand gestures. Built with FastAPI, OpenCV, MediaPipe, and a standalone web dashboard, it translates gestures into actions and text in real time.
 
 ---
 
 ## Why Silentlink?
 
-Imagine interacting with your computer without touching a mouse or keyboard:
+SilentLink was developed to address the communication and accessibility challenges faced by individuals with hearing and speech impairments. The project leverages Artificial Intelligence, Computer Vision, and Hand Gesture Recognition to enable intuitive, touch-free interaction between users and computers.
 
-- Move the cursor with your index finger
-- Click, drag, and scroll with simple gestures
-- Trigger app launches like WhatsApp or YouTube
-- Use hold-to-confirm actions for safer command execution
-- Translate and display gesture-based text in the UI
+By translating hand gestures into system commands and meaningful text in real time, SilentLink reduces dependence on traditional input devices such as keyboards and mice. Its goal is to provide an accessible, efficient, and user-friendly interface while demonstrating the practical application of AI in creating inclusive and assistive technologies.
 
-This project is built for experimentation, demos, accessibility, and the thrill of creating a genuinely hands-free interface.
+Beyond accessibility, SilentLink showcases the integration of modern technologies including FastAPI, OpenCV, MediaPipe, WebSockets, and real-time processing to build a scalable and interactive gesture-based communication system.
 
 ---
 
 ## ✨ Core Features
 
-- Real-time webcam hand tracking
-- Gesture-driven cursor control
-- Click, drag, scroll, and drop actions
-- Hold-to-confirm interaction flow
-- ASL-inspired symbol recognition
-- WebSocket-powered live processing
-- Clean React + Tailwind dashboard
+- Real-time hand gesture recognition
+- Sign language translation
+- Cursor movement and click control
+- Scroll and drag using gestures
+- Launch desktop applications using gestures
+- Live dashboard with analytics
+- User login interface
+- Messaging and gesture history
+- Multi-language translation support
+- FastAPI backend with WebSocket communication
 
 ---
 
 ## 🧠 How It Works
 
-1. The webcam feed is processed in the frontend.
-2. Hand landmark data is sent to the backend over WebSockets.
-3. The gesture engine interprets the motion and returns a command result.
-4. The backend executes the command and updates the connected interface.
+1. The webcam captures live video.
+2. MediaPipe detects hand landmarks.
+3. Gesture data is sent to the FastAPI backend through WebSockets.
+4. The Gesture Engine identifies the gesture.
+5. The backend executes the corresponding system action.
+6. Results are displayed instantly on the dashboard.
 
 This makes the app feel responsive, modular, and easy to extend as more gestures are added.
 
@@ -49,15 +45,17 @@ This makes the app feel responsive, modular, and easy to extend as more gestures
 ## 🛠️ Tech Stack
 
 ### Frontend
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- Framer Motion
+- HTML5
+- CSS3
+- JavaScript (ES6)
+- MediaPipe
+- WebSocket API
 
 ### Backend
-- FastAPI
 - Python
+- FastAPI
+- OpenCV
+- MediaPipe
 - WebSockets
 - PyAutoGUI
 - Deep Translator
@@ -67,31 +65,43 @@ This makes the app feel responsive, modular, and easy to extend as more gestures
 ## 📁 Project Structure
 
 ```text
-Silentlink/
-├── backend/         # FastAPI server, gesture logic, command execution
-├── frontend/        # React/Vite dashboard UI
-├── standalone_frontend/  # Lightweight standalone web interface
-└── Run-Silentlink.ps1    # One-click local launcher
+
+SilentLink/
+│
+├── backend/
+│   ├── main.py
+│   ├── gesture_engine.py
+│   ├── cursor_controller.py
+│   ├── app_launcher.py
+│
+├── standalone_frontend/
+│   ├── index.html
+│   ├── login.html
+│   ├── main.js
+│   └── style.css
+│
+├── README.md
+├── Run-SilentLink.ps1
+└── requirements.txt
+
 ```
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Install frontend dependencies
+
+### 1. Set up the Python backend
 
 ```powershell
-cd frontend
-npm install
-```
 
-### 2. Set up the Python backend
-
-```powershell
-cd backend
+git clone https://github.com/Nageswari2005/SilentLink.git
+cd SilentLink
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install fastapi uvicorn pyautogui deep-translator
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+python backend/main.py
+
 ```
 
 ### 3. Run the app
@@ -136,12 +146,6 @@ http://localhost:8000
 - Voice + gesture hybrid control
 - Multi-language command support
 - Custom gesture profiles for different users
-
----
-
-## Contributing
-
-Contributions are welcome. If you want to improve the gesture model, UI, or command system, feel free to open an issue or submit a pull request.
 
 ---
 
