@@ -3,8 +3,6 @@
 > **An AI-powered Sign Language Translation and Gesture Control System that enables intuitive, touch-free human-computer interaction using Computer Vision, Artificial Intelligence, and Real-Time Communication.**
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi)
-![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-red?logo=opencv)
 ![MediaPipe](https://img.shields.io/badge/MediaPipe-Hand%20Tracking-orange)
 ![GitHub](https://img.shields.io/badge/GitHub-Repository-black?logo=github)
 
@@ -15,6 +13,42 @@
 SilentLink is an AI-powered Sign Language Translation and Gesture Control System developed to improve accessibility for individuals with hearing and speech impairments. The application uses Computer Vision and Artificial Intelligence to recognize hand gestures in real time and translate them into meaningful text or system actions.
 
 The system combines FastAPI, OpenCV, MediaPipe, and WebSockets to deliver low-latency communication between the backend and the standalone web dashboard. In addition to sign language translation, SilentLink enables gesture-based mouse control, desktop application launching, multilingual translation, and real-time interaction without requiring traditional input devices.
+
+---
+
+# 📸 Project Preview
+
+Experience the modern interface of **SilentLink**, designed to provide an intelligent, intuitive, and accessible gesture-controlled computing experience. The screenshots below showcase the application's key interfaces, including secure authentication, the interactive command center, and real-time gesture recognition powered by Artificial Intelligence and Computer Vision.
+
+---
+
+## 🔐 Login Interface
+
+The Login Interface provides secure access to the SilentLink Command Center through a clean, modern, and user-friendly authentication page.
+
+<p align="center">
+  <img src="screenshots/login.png" alt="SilentLink Login Interface" width="900">
+</p>
+
+---
+
+## 📊 SilentLink Command Center
+
+The Command Center serves as the application's primary dashboard, providing real-time gesture recognition, backend connectivity, system monitoring, messaging, text-to-speech controls, analytics, and user preferences in a unified interface.
+
+<p align="center">
+  <img src="screenshots/dashboard.png" alt="SilentLink Command Center Dashboard" width="1000">
+</p>
+
+---
+
+## 🤟 Real-Time Gesture Recognition
+
+SilentLink leverages **MediaPipe** and **OpenCV** to detect hand landmarks and recognize gestures in real time. The system displays the identified gesture along with confidence scores, enabling accurate and responsive interaction.
+
+<p align="center">
+  <img src="screenshots/tracking_open_palm.png" alt="Real-Time Gesture Recognition" width="700">
+</p>
 
 ---
 
@@ -64,6 +98,7 @@ SilentLink addresses this challenge by leveraging AI-powered hand gesture recogn
 This architecture provides low latency, real-time performance, and easy extensibility for future gesture additions.
 
 ---
+
 
 # 🏗️ System Architecture
 
@@ -121,6 +156,7 @@ SilentLink follows a modular client-server architecture that combines Computer V
 
 ---
 
+
 # ⚙️ Technology Stack
 
 | Category | Technologies |
@@ -136,6 +172,7 @@ SilentLink follows a modular client-server architecture that combines Computer V
 | **Development Tools** | Visual Studio Code, Python Virtual Environment |
 
 ---
+
 
 # 📂 Project Structure
 
@@ -154,9 +191,27 @@ SilentLink/
 │   ├── main.js
 │   └── style.css
 │
-├── README.md
+├── screenshots/
+│   ├── login.png
+│   ├── dashboard.png
+│   └── tracking_open_palm.png
+│
 ├── requirements.txt
-└── Run-SilentLink.ps1
+├── Run-SilentLink.ps1
+└── README.md
+```
+
+### 📖 Structure Overview
+
+| Folder/File | Description |
+|-------------|-------------|
+| **backend/** | Contains the FastAPI server, gesture recognition logic, and system automation modules. |
+| **standalone_frontend/** | Contains the HTML, CSS, and JavaScript files for the user interface. |
+| **screenshots/** | Stores images used in the README for project preview. |
+| **requirements.txt** | Lists all required Python packages and dependencies. |
+| **Run-SilentLink.ps1** | PowerShell script to launch the application on Windows. |
+| **README.md** | Comprehensive project documentation, setup guide, and usage instructions. |
+
 ```
 
 ---
@@ -259,7 +314,6 @@ http://localhost:5500/login.html
 ```
 
 ---
-
 # 🎯 Key Capabilities
 
 SilentLink enables users to:
@@ -293,18 +347,6 @@ SilentLink enables users to:
 
 ---
 
-# 📸 Screenshots
-
-Add screenshots of the following pages:
-
-- Login Page
-- Dashboard
-- Gesture Recognition
-- Analytics
-- Settings
-
-
----
 
 # 🤝 Contributing
 
@@ -337,4 +379,5 @@ B.Tech – Computer Science and Engineering
 Malla Reddy Engineering College for Women
 
 GitHub: https://github.com/Nageswari2005
+
 
